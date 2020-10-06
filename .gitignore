@@ -258,3 +258,5 @@ MigrationBackup/
 
 *.sln
 *.vcxproj
+
+*.bat
