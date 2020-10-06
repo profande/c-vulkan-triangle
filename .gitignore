@@ -2,6 +2,7 @@
 *.rsuser
 *.suo
 *.user
+*.filters
 *.userosscache
 *.sln.docstates
 
