@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifndef NDEBUG
-#include <string.h>
 
 internal const char *validation_layers[] = {
     "VK_LAYER_KHRONOS_validation"
@@ -67,12 +67,21 @@ void CreateInstance(VkInstance *instance) {
     create_info.sType            = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     create_info.pApplicationInfo = &app_info;
 
-    uint32 glfw_extension_count = 0;
+    uint32 extension_count = 0;
     const char **glfw_extensions;
-    glfw_extensions = glfwGetRequiredInstanceExtensions(&glfw_extension_count);
+    glfw_extensions = glfwGetRequiredInstanceExtensions(&extension_count);
 
-    const char **extensions = malloc(glfw_extension_count * sizeof(const char *));
-    
+    const char **extensions = malloc(extension_count * sizeof(const char *));
+    memcpy(extensions, glfw_extensions, extension_count * sizeof(const char *));
+
+#ifndef NDEBUG
+    extensions = realloc(extensions, ++extension_count * sizeof(const char *));
+    extensions[extension_count - 1] = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+#endif
+
+    create_info.enabledExtensionCount   = extension_count;
+    create_info.ppEnabledExtensionNames = extensions;
+
 #ifndef NDEBUG
     create_info.enabledLayerCount   = array_length(validation_layers);
     create_info.ppEnabledLayerNames = validation_layers;
@@ -80,10 +89,10 @@ void CreateInstance(VkInstance *instance) {
     VkDebugUtilsMessengerCreateInfoEXT debug_create_info = { 0 };
     debug_create_info.sType           = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
     debug_create_info.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-                                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+                                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT   ;
     debug_create_info.messageType     = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT     |
                                         VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT |
-                                        VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT;
+                                        VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT  ;
     debug_create_info.pfnUserCallback = DebugMessageCallback;
     
     create_info.pNext = &debug_create_info;
@@ -96,4 +105,6 @@ void CreateInstance(VkInstance *instance) {
         fprintf(stderr, "Vulkan Instance Creation failed\n");
         exit(EXIT_FAILURE);
     }
+
+    free(extensions);
 }
