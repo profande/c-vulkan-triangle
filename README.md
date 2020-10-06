@@ -1,1 +1,3 @@
-# c-vulkan-triangle
+# Dependencies
+* Vulkan SDK  
+* GLFW 3
