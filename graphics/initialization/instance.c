@@ -5,7 +5,6 @@
 #include <string.h>
 
 #ifndef NDEBUG
-
 internal const char *validation_layers[] = {
     "VK_LAYER_KHRONOS_validation"
 };
@@ -77,7 +76,7 @@ void CreateInstance(VkInstance *instance) {
 #ifndef NDEBUG
     extensions = realloc(extensions, ++extension_count * sizeof(const char *));
     extensions[extension_count - 1] = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
-#endif
+#endif // NDEBUG
 
     create_info.enabledExtensionCount   = extension_count;
     create_info.ppEnabledExtensionNames = extensions;
