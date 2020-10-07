@@ -7,3 +7,11 @@ Optional_t NewOptional(void *val) {
 
     return opt;
 }
+
+Optional_t NewOptionalWithNoValue() {
+    Optional_t opt = { 0 };
+    opt.val      = NULL;
+    opt.hasValue = false;
+
+    return opt;
+}

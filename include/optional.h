@@ -8,3 +8,4 @@ typedef struct Optional_t {
 } Optional_t;
 
 Optional_t NewOptional(void *val);
+Optional_t NewOptionalWithNoValue();
