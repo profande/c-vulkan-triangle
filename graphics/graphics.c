@@ -7,6 +7,8 @@ internal GLFWwindow *window;
 
 internal VkInstance instance;
 
+internal VkSurfaceKHR surface;
+
 internal GLFWwindow *InitWindow(uint32 w, uint32 h, const char *name) {
      if (glfwInit() == GLFW_FALSE) {
         const char *err = NULL;
@@ -35,6 +37,14 @@ GLFWwindow *InitGraphics(uint32 w, uint32 h, const char *name) {
     window = InitWindow(w, h, name);
     
     CreateInstance(&instance);
+
+    if (glfwCreateWindowSurface(instance, window, NULL, &surface) != VK_SUCCESS) {
+        const char *err = NULL;
+        glfwGetError(&err);
+        fprintf(stderr, "glfwCreateWindowSurface failed! glfwGetError: %s\n", err);
+
+        exit(EXIT_FAILURE);
+    }
 
     return window;
 }
