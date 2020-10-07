@@ -38,3 +38,9 @@ GLFWwindow *InitGraphics(uint32 w, uint32 h, const char *name) {
 
     return window;
 }
+
+void GraphicsCleanup() {
+    vkDestroyInstance(instance, NULL);
+
+    glfwTerminate();
+}

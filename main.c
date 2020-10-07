@@ -13,6 +13,6 @@ int32 main(void) {
         glfwPollEvents();
     }
 
-    glfwTerminate();
+    GraphicsCleanup();
     return 0;
 }
