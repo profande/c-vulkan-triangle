@@ -34,8 +34,7 @@ internal bool8 CheckValidationLayerSupport() {
     return true;
 }
 
-// Warning: debug_create_info should be zero initialized before passing it to this
-//          function
+// Warning: debug_create_info should be zero initialized before passing it to this function
 inline internal void 
 SetupDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT *debug_create_info) 
 {
