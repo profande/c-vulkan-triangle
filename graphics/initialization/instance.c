@@ -34,6 +34,20 @@ internal bool8 CheckValidationLayerSupport() {
     return true;
 }
 
+// Warning: debug_create_info should be zero initialized before passing it to this
+//          function
+inline internal void 
+SetupDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT *debug_create_info) 
+{
+    debug_create_info->sType           = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+    debug_create_info->messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+                                         VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT   ;
+    debug_create_info->messageType     = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT     |
+                                         VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT |
+                                         VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT  ;
+    debug_create_info->pfnUserCallback = DebugMessageCallback;
+}
+
 internal bool32 VKAPI_CALL 
 DebugMessageCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
                      VkDebugUtilsMessageTypeFlagsEXT             messageTypes,
@@ -86,14 +100,8 @@ void CreateInstance(VkInstance *instance) {
     create_info.ppEnabledLayerNames = validation_layers;
 
     VkDebugUtilsMessengerCreateInfoEXT debug_create_info = { 0 };
-    debug_create_info.sType           = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-    debug_create_info.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-                                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT   ;
-    debug_create_info.messageType     = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT     |
-                                        VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT |
-                                        VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT  ;
-    debug_create_info.pfnUserCallback = DebugMessageCallback;
-    
+    SetupDebugMessenger(&debug_create_info);
+
     create_info.pNext = &debug_create_info;
 #elif
     create_info.enabledLayerCount = 0;
