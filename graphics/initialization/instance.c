@@ -34,6 +34,17 @@ internal bool8 CheckValidationLayerSupport() {
     return true;
 }
 
+internal bool32 VKAPI_CALL 
+DebugMessageCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
+                     VkDebugUtilsMessageTypeFlagsEXT             messageTypes,
+                     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+                     void*                                       pUserData) 
+{
+    fprintf(stderr, "%s\n", pCallbackData->pMessage);
+
+    return VK_FALSE;
+}
+
 // Warning: debug_create_info should be zero initialized before passing it to this function
 inline internal void 
 SetupDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT *debug_create_info) 
@@ -47,16 +58,6 @@ SetupDebugMessenger(VkDebugUtilsMessengerCreateInfoEXT *debug_create_info)
     debug_create_info->pfnUserCallback = DebugMessageCallback;
 }
 
-internal bool32 VKAPI_CALL 
-DebugMessageCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
-                     VkDebugUtilsMessageTypeFlagsEXT             messageTypes,
-                     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-                     void*                                       pUserData) 
-{
-    fprintf(stderr, "%s\n", pCallbackData->pMessage);
-
-    return VK_FALSE;
-}
 #endif // NDEBUG
 
 void CreateInstance(VkInstance *instance) {
